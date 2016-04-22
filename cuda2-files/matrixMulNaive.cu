@@ -15,9 +15,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
-//#define BLOCK_SIZE_X 16
-//#define BLOCK_SIZE_Y 16
 #define BLOCK_DIM 16
+#define BLOCK_SIZE_X BLOCK_DIM
+#define BLOCK_SIZE_Y BLOCK_DIM
 #define MATRIX_DIM 1024
 #define TILES_NUM ( MATRIX_DIM / BLOCK_DIM )
 
@@ -51,7 +51,7 @@ __global__ void matrixMulCUDA(float *C, float *A, float *B)
     float res = 0.0;
 
     // iterate through tiles
-    for (tId = 0; tId < TILES_NUM; tId++) {
+    for (int tId = 0; tId < TILES_NUM; tId++) {
 	tile_A[threadIdx.x][threadIdx.y] = A[POS(posx, threadIdx.y)];
 	tile_B[threadIdx.x][threadIdx.y] = B[POS(threadIdx.x, posy)];
 	__syncthreads();
@@ -131,7 +131,7 @@ int main()
     cudaCheck(cudaMemcpy(d_B, h_B, matrix_mem_size, cudaMemcpyHostToDevice));
 
     // Setup execution parameters
-    dim3 threads(BLOCK_DIM, BLOCK_DIM;
+    dim3 threads(BLOCK_DIM, BLOCK_DIM);
     dim3 grid(MATRIX_DIM / threads.x, MATRIX_DIM / threads.y);
 
     // Create and start timer
