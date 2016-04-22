@@ -52,8 +52,8 @@ __global__ void matrixMulCUDA(float *C, float *A, float *B)
 
     // iterate through tiles
     for (int tId = 0; tId < TILES_NUM; tId++) {
-	tile_A[threadIdx.x][threadIdx.y] = A[POS(posx, threadIdx.y)];
-	tile_B[threadIdx.x][threadIdx.y] = B[POS(threadIdx.x, posy)];
+	tile_A[threadIdx.x][threadIdx.y] = A[POS(posx, tId * BLOCK_DIM + threadIdx.y)];
+	tile_B[threadIdx.x][threadIdx.y] = B[POS(tId * BLOCK_DIM + threadIdx.x, posy)];
 	__syncthreads();
 	#pragma unroll
     	for (int i = 0; i < BLOCK_DIM; ++i) {
